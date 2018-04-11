@@ -1,12 +1,13 @@
 # -*- coding: utf-8-*-
 # 天气插件
 import sys
+import logging
 
 reload(sys)
 sys.setdefaultencoding('utf8')
 
 # Standard module stuff
-WORDS = ["CESHI"]
+WORDS = ["测试"]
 SLUG = "test"
 
 def handle(text, mic, profile, wxbot=None):
@@ -21,7 +22,7 @@ def handle(text, mic, profile, wxbot=None):
     """
     logger = logging.getLogger(__name__)
 
-	logger.debug("Test: ", text)
+    logger.debug("Test: ", text)
 
     # get config
     if SLUG not in profile or \
