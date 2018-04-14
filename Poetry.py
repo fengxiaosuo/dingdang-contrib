@@ -10,6 +10,7 @@ sys.setdefaultencoding('utf8')
 # Standard module stuff
 WORDS = ["TANGSHI"]
 SLUG = "poetry"
+DEBUG = 1
 
 def handle(text, mic, profile, wxbot=None):
     """
@@ -23,7 +24,10 @@ def handle(text, mic, profile, wxbot=None):
     """
     logger = logging.getLogger(__name__)
 
-    logger.debug("Test: ", text)
+    if DEBUG:
+        print __name__ + " Input text is: " + text
+    else:
+        logger.debug("Input text is: ", text)
 
     # 打开数据库连接
     db = MySQLdb.connect("localhost", "root", "broadcom", "tang_poetry", charset='utf8' )
@@ -32,27 +36,36 @@ def handle(text, mic, profile, wxbot=None):
     cursor = db.cursor()
 
     # SQL 查询语句
-    sql = "SELECT * FROM tang_poetry.poetries where content like '%$text%' limit 1;"
+    sql = "SELECT * FROM tang_poetry.poetries where content like '%"+text+"%' limit 1;"
 
     try:
         # 执行SQL语句
         cursor.execute(sql)
-        # 获取所有记录列表
-        results = cursor.fetchall()
+        results = cursor.fetchone()
+        poet = results[1]
+        content = results[2]
+        title = results[3]
 
-        for row in results:
-            myid = row[0]
-            poet = row[1]
-            content = row[2]
-            title = row[3]
-            print "id=%d,poet=%d,content=%s,title=%s" % (myid, poet, content, title)
+        sql1 = "SELECT * FROM poets where id = %s;" % poet
 
-        responds = u'%s' % content
-        mic.say(responds, cache=True)
+        cursor.execute(sql1)
+        results = cursor.fetchone()
+        poet_name = results[1]
+
+        respond = "唐 " + poet_name + " " + title + " " + content
+        responds = u'%s' % respond # unicode
+
+        if DEBUG:
+            print respond
+        else:
+            mic.say(responds, cache=True)
         
     except Exception, e:
-        logger.error(e)
-        mic.say('信马由缰天涯路，人生命运，三分早由天注定', cache=True)    
+        if DEBUG:
+            print "数据库读取失败"
+        else:
+            logger.error(e)
+            mic.say('数据库读取失败', cache=True)  
 
     # 关闭数据库连接
     db.close()
@@ -64,3 +77,6 @@ def isValid(text):
         text -- user-input, typically transcribed speech
     """
     return any(word in text for word in [u"test", u"测试"])
+
+if __name__ == "__main__":
+    handle("离离原上草", 0, 0)
