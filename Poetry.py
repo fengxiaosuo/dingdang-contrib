@@ -76,7 +76,7 @@ def isValid(text):
         Arguments:
         text -- user-input, typically transcribed speech
     """
-    return any(word in text for word in [u"test", u"测试"])
+    return any(word in text for word in [u"唐诗", u"诗词"])
 
 if __name__ == "__main__":
     handle("离离原上草", 0, 0)
