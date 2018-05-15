@@ -1,5 +1,4 @@
 # -*- coding: utf-8-*-
-# 天气插件
 import sys
 import logging
 sys.path.append(r'/home/pi/git/wangcai') 
@@ -13,7 +12,7 @@ WORDS = ["WANGCAI"]
 SLUG = "wangcai"
 DEBUG = 1
 
-def handle(text, mic, profile, wangcai, wxbot=None):
+def handle(text, mic, profile, wxbot=None):
     """
     Responds to user-input, typically speech text
     Arguments:
@@ -25,6 +24,9 @@ def handle(text, mic, profile, wangcai, wxbot=None):
     """
     logger = logging.getLogger(__name__)
 
+    wc = Wangcai("")
+    print("my name is %s" % wc.name)
+
     if DEBUG:
         print "Input text is: " + text
     else:
@@ -33,10 +35,10 @@ def handle(text, mic, profile, wangcai, wxbot=None):
     try:
         if any(word in text for word in [u"看左边", u"左看"]):
             print "see left"
-            wangcai.frontservo_appointed_detection(180)
+            wc.frontservo_appointed_detection(180)
         elif any(word in text for word in [u"转个圈", u"转圈"]):
             print "turn around by left"
-            wangcai.spin_left()
+            wc.spin_left()
         else:
             print "else"
         
@@ -58,7 +60,6 @@ def isValid(text):
 
 if __name__ == "__main__":
 
-    wc = Wangcai("")
-    print("my name is %s" % wc.name)
 
-    handle("左看", 0, 0, wc)
+
+    handle("左看", 0, 0)
