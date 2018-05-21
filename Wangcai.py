@@ -35,12 +35,61 @@ def handle(text, mic, profile, wxbot=None):
     try:
         if any(word in text for word in [u"看左边", u"左看"]):
             print "see left"
+            mic.say('看左边', cache=False)
             wc.frontservo_appointed_detection(180)
-        elif any(word in text for word in [u"转个圈", u"转圈"]):
+
+        elif any(word in text for word in [u"看右边", u"右看"]):
+            print "see right"
+            mic.say('看右边', cache=False)
+            wc.frontservo_appointed_detection(0)
+
+        elif any(word in text for word in [u"看中间", u"前看", u"看前"]):
+            print "see front"
+            mic.say('看中间', cache=False)
+            wc.frontservo_appointed_detection(90)
+
+        elif any(word in text for word in [u"转个圈", u"左转圈"]):
             print "turn around by left"
+            mic.say('转个圈', cache=False)
             wc.spin_left()
+
+        elif any(word in text for word in [u"右圈", u"右转圈"]):
+            print "turn around by right"
+            mic.say('转个圈', cache=False)
+            wc.spin_right()
+
+        elif any(word in text for word in [u"前进", u"往前"]):
+            wc.advance(0.5)
+
+        elif any(word in text for word in [u"后退", u"往后"]):
+            wc.back(0.5)
+
+        elif any(word in text for word in [u"左转", u"往左"]):
+            wc.left(0.5)
+
+        elif any(word in text for word in [u"右转", u"往右"]):
+            wc.right(0.5)
+
+        elif any(word in text for word in [u"红灯", u"开灯"]):
+            wc.color_led_pwm(255,0,0)
+
+        elif any(word in text for word in [u"绿灯"]):
+            wc.color_led_pwm(0,255,0)
+
+        elif any(word in text for word in [u"蓝灯"]):
+            wc.color_led_pwm(0,0,255)
+
+        elif any(word in text for word in [u"关灯"]):
+            wc.color_led_pwm(0,0,0)
+
+        elif any(word in text for word in [u"距离", u"障碍"]):
+            print "distance is %s" % wc.distance()
+            temp= "测距%s厘米" % wc.distance()
+            mic.say(temp, cache=False)
+
         else:
-            print "else"
+            print "else for nothing"
+            wc.whistle()
         
     except Exception, e:
         if DEBUG:
